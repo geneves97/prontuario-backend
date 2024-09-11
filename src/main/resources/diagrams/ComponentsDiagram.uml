@@ -1,0 +1,22 @@
+@startuml
+
+package "Sistema de Prontuário e Receituário" {
+
+    [Frontend] --> [API]
+
+    [API] --> [Componente de Autenticação]
+    [API] --> [Componente de Gerenciamento de Pacientes]
+    [API] --> [Componente de Gerenciamento de Prontuários]
+    [API] --> [Componente de Gerenciamento de Receituários]
+    [API] --> [Componente de Gerenciamento de Empregados]
+
+    [Componente de Autenticação] --> [Banco de Dados Local] : Verifica login/token
+    [Componente de Gerenciamento de Pacientes] --> [Banco de Dados Local] : CRUD Pacientes
+    [Componente de Gerenciamento de Prontuários] --> [Banco de Dados Local] : CRUD Prontuários
+    [Componente de Gerenciamento de Receituários] --> [Banco de Dados Local] : CRUD Receituários
+    [Componente de Gerenciamento de Empregados] --> [Banco de Dados Local] : CRUD Empregados
+
+    [Banco de Dados Local] --> [Banco de Dados Principal] : Sincronização
+}
+
+@enduml

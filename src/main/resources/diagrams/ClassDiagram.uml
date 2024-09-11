@@ -1,0 +1,91 @@
+@startuml
+
+class Empregado {
+    - id: Integer <<Unique>>
+    - nome: String
+    - email: String
+    - cargo: String
+    + visualizarProntuario(paciente: Paciente)
+    + visualizarReceituarios(paciente: Paciente)
+    + criarProntuario(paciente: Paciente)
+    + editarDadosPaciente(paciente: Paciente)
+}
+
+class Administrador {
+    + registrarNovoEmpregado(empregado: Empregado)
+    + registrarNovoPaciente(paciente: Paciente)
+    + editarDadosEmpregado(empregado: Empregado)
+    + apagarEmpregado(empregado: Empregado)
+    + apagarPaciente(paciente: Paciente)
+}
+
+class ProfissionalDaSaude {
+    - formacao: String
+    - especialidade: String
+    - registroConselho: String
+    + editarProntuario(paciente: Paciente)
+    + emitirReceituario(paciente: Paciente)
+}
+
+class Paciente {
+    - id: Integer <<Unique>>
+    - nome: String
+    + visualizarProntuario()
+    + visualizarReceituarios()
+}
+
+class Prontuario {
+    - id: Integer <<Unique>>
+    - modeloDeAnamnese: String
+    - queixaPrincipal: String
+    - HDA: String
+    - antecedentesPessoais: String
+    - enterrogatorioSistematico: String
+    - historiaPsicosocial: String
+
+    + getMedicamentos(): List<Medicamento>
+}
+
+class Receituario {
+    - id: Integer <<Unique>>
+    - dataEmissao: Date
+    - medicoId: Integer // FK para ProfissionalDaSaude
+    - medicoNome: String
+    + getMedicamentos(): List<Medicamento>
+}
+
+class Medicamento {
+    - id: Integer <<Unique>>
+    - nome: String
+    - dose: String
+    - quantidade: Integer
+}
+
+class Autenticacao {
+    - username: String
+    - password: String
+    - token: String
+    + login(username: String, password: String): String
+    + logout(token: String)
+    + validateToken(token: String): Boolean
+}
+
+Empregado <|-- Administrador : "é um"
+Empregado <|-- ProfissionalDaSaude : "é um"
+
+Paciente "1" -- "0..1" Prontuario : "tem"
+Paciente "1" -- "0..*" Receituario : "tem"
+Receituario "1" -- "1..*" Medicamento : "contém"
+Receituario "1" -- "1" ProfissionalDaSaude : "emitido por"
+ProfissionalDaSaude "1" -- "0..*" Prontuario : "edita"
+ProfissionalDaSaude "1" -- "0..*" Receituario : "emite"
+Empregado "1" -- "0..*" Paciente : "edita dados de"
+Empregado "1" -- "0..*" Receituario : "visualiza receituários de"
+Empregado "1" -- "0..1" Autenticacao : "utiliza"
+Administrador "1" -- "0..1" Autenticacao : "utiliza"
+ProfissionalDaSaude "1" -- "0..1" Autenticacao : "utiliza"
+Paciente "1" -- "0..1" Autenticacao : "utiliza"
+
+Prontuario "1" -- "0..*" Medicamento : "contém"
+
+@enduml
