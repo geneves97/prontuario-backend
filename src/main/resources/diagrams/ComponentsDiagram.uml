@@ -1,5 +1,6 @@
 @startuml
 package "Sistema de Prontuário e Receituário" {
+
     [Frontend] --> [API]
 
     [API] --> [Componente de Autenticação]
