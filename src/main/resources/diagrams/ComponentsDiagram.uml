@@ -16,5 +16,4 @@ package "Sistema de Prontuário e Receituário" {
 
     [Banco de Dados Local] --> [Banco de Dados Principal] : Sincronização
 }
-
 @enduml
