@@ -1,0 +1,75 @@
+@startuml
+left to right direction
+
+skinparam usecase {
+  BackgroundColor LightYellow
+  BorderColor Black
+  FontSize 14
+}
+skinparam actor {
+  BackgroundColor LightBlue
+  BorderColor Black
+  FontSize 14
+}
+
+actor :Empregado:
+actor :Administrador:
+actor :ProfissionalDaSaude:
+actor :Paciente:
+
+package "Autenticação" {
+    usecase "Login" as UC11
+    usecase "Logout" as UC12
+    usecase "Validar Token" as UC13
+}
+
+package "Gerenciamento de Usuários" {
+    usecase "Registrar Novo Empregado" as UC1 << (R,#FFAAAA) >>
+    usecase "Registrar Novo Paciente" as UC2 << (R,#FFAAAA) >>
+    usecase "Editar Dados do Empregado" as UC3
+    usecase "Apagar Empregado" as UC4
+    usecase "Apagar Paciente" as UC5
+}
+
+package "Gerenciamento de Prontuário e Receituário" {
+    usecase "Criar Prontuário" as UC6
+    usecase "Editar Prontuário" as UC7
+    usecase "Visualizar Prontuário" as UC8
+    usecase "Emitir Receituário" as UC9
+    usecase "Visualizar Receituário" as UC10
+}
+
+:Administrador: --> UC1
+:Administrador: --> UC2
+:Administrador: --> UC3
+:Administrador: --> UC4
+:Administrador: --> UC5
+
+:ProfissionalDaSaude: --> UC6
+:ProfissionalDaSaude: --> UC7
+:ProfissionalDaSaude: --> UC8
+:ProfissionalDaSaude: --> UC9
+:ProfissionalDaSaude: --> UC10
+
+:Paciente: --> UC8
+:Paciente: --> UC10
+
+:Empregado: --> UC8
+:Empregado: --> UC10
+
+:Empregado: --> UC11
+:Administrador: --> UC11
+:ProfissionalDaSaude: --> UC11
+:Paciente: --> UC11
+
+:Empregado: --> UC12
+:Administrador: --> UC12
+:ProfissionalDaSaude: --> UC12
+:Paciente: --> UC12
+
+:Empregado: --> UC13
+:Administrador: --> UC13
+:ProfissionalDaSaude: --> UC13
+:Paciente: --> UC13
+
+@enduml
