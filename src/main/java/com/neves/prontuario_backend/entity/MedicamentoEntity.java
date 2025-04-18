@@ -21,7 +21,7 @@ public class MedicamentoEntity {
 
     @Column(name = "Dose")
     private String dose;
-
+4
     @Column(name = "Quantidade")
     private Integer quantidade;
 
