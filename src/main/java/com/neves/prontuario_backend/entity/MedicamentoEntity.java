@@ -7,19 +7,29 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "Medicamento")
 public class MedicamentoEntity {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @SequenceGenerator(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    Integer id;
+    @SequenceGenerator(name = "id")
+    private Integer id;
 
-    @Column(name = "nome")
-    String nome;
+    @Column(name = "Nome")
+    private String nome;
 
-    @Column(name = "dose")
-    Float dose;
+    @Column(name = "Dose")
+    private String dose;
 
+    @Column(name = "Quantidade")
+    private Integer quantidade;
 
+    @ManyToOne
+    @JoinColumn(name = "ProntuarioID")
+    private ProntuarioEntity prontuario;
+
+    @ManyToOne
+    @JoinColumn(name = "ReceituarioID")
+    private ReceituarioEntity receituario;
 }
