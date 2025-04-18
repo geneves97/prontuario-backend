@@ -1,37 +1,39 @@
 package com.neves.prontuario_backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "Empregado")
 public class EmpregadoEntity {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @SequenceGenerator(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    Integer id;
+    @SequenceGenerator(name = "id")
+    private Integer id;
 
-    @Column(name="nome")
-    String nome;
+    @Column(name = "Nome")
+    private String nome;
 
-    @Column(name="email")
-    String email;
+    @Column(name = "Email")
+    private String email;
 
-    @Column(name="cargo")
-    String cargo;
+    @Column(name = "Cargo")
+    private String cargo;
 
-    public void visualizarProntuario (){
-        return ;
-    }
+    @OneToMany(mappedBy = "empregadoEditor", cascade = CascadeType.ALL)
+    private List<PacienteEntity> pacientesEditados;
 
-    public void visualizarReceituario (){
-        return ;
-    }
+    @OneToMany(mappedBy = "empregadoVisualizador", cascade = CascadeType.ALL)
+    private List<ReceituarioEntity> receituariosVisualizados;
 
-    public void criarProntuario (){
-        return ;
-    }
-
-    public void editarPaciente (){
-        return ;
-    }
+    @OneToOne
+    @JoinColumn(name = "AutenticacaoID", referencedColumnName = "ID")
+    private AutenticacaoEntity autenticacao;
 }
