@@ -40,7 +40,7 @@ class Prontuario {
     - queixaPrincipal: String
     - HDA: String
     - antecedentesPessoais: String
-    - enterrogatorioSistematico: String
+    - interrogatorioSistematico: String
     - historiaPsicosocial: String
 
     + getMedicamentos(): List<Medicamento>
