@@ -21,15 +21,4 @@ public class MedicamentoEntity {
 
     @Column(name = "Dose")
     private String dose;
-4
-    @Column(name = "Quantidade")
-    private Integer quantidade;
-
-    @ManyToOne
-    @JoinColumn(name = "ProntuarioID")
-    private ProntuarioEntity prontuario;
-
-    @ManyToOne
-    @JoinColumn(name = "ReceituarioID")
-    private ReceituarioEntity receituario;
 }
