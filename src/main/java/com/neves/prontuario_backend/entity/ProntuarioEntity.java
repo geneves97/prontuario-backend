@@ -36,14 +36,4 @@ public class ProntuarioEntity {
     @Column(name = "HistoriaPsicosocial")
     private String historiaPsicosocial;
 
-    @OneToOne
-    @JoinColumn(name = "PacienteID", referencedColumnName = "ID")
-    private PacienteEntity paciente;
-
-    @ManyToOne
-    @JoinColumn(name = "ProfissionalID", referencedColumnName = "ID")
-    private ProfissionalDaSaudeEntity profissional;
-
-    @OneToMany(mappedBy = "prontuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MedicamentoEntity> medicamentos;
 }

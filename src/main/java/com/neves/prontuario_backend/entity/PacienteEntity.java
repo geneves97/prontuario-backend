@@ -20,16 +20,6 @@ public class PacienteEntity {
     @Column(name = "Nome")
     private String nome;
 
-    @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL)
-    private ProntuarioEntity prontuario;
-
-    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)
-    private List<ReceituarioEntity> receituarios;
-
-    @OneToOne
-    @JoinColumn(name = "AutenticacaoID", referencedColumnName = "ID")
-    private AutenticacaoEntity autenticacao;
-
     public void visualizarProntuario() {
         // Lógica para visualização do prontuário
     }

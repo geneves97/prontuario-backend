@@ -27,23 +27,7 @@ public class ReceituarioEntity {
     @Column(name = "MedicoNome")
     private String medicoNome;
 
-    @ManyToOne
-    @JoinColumn(name = "PacienteID")
-    private PacienteEntity paciente;
-
-    @ManyToOne
-    @JoinColumn(name = "ProfissionalID")
-    private ProfissionalDaSaudeEntity profissional;
-
-    // Lista de medicamentos sem relacionamento direto com JPA
-    @Transient
-    private List<MedicamentoEntity> medicamentos;
 
     // --- Método para adicionar medicamento manualmente ---
-    public void adicionarMedicamento(MedicamentoEntity medicamento) {
-        if (medicamentos == null) {
-            medicamentos = new java.util.ArrayList<>();
-        }
-        medicamentos.add(medicamento);
-    }
+
 }

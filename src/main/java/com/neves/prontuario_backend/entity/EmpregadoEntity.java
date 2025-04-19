@@ -29,13 +29,4 @@ public class EmpregadoEntity {
     @Column(name = "Cargo")
     private String cargo;
 
-    @OneToMany(mappedBy = "empregadoEditor", cascade = CascadeType.ALL)
-    private List<PacienteEntity> pacientesEditados;
-
-    @OneToMany(mappedBy = "empregadoVisualizador", cascade = CascadeType.ALL)
-    private List<ReceituarioEntity> receituariosVisualizados;
-
-    @OneToOne
-    @JoinColumn(name = "AutenticacaoID", referencedColumnName = "ID")
-    private AutenticacaoEntity autenticacao;
 }

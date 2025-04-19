@@ -19,6 +19,6 @@ public class MedicamentoEntity {
     @Column(name = "Nome")
     private String nome;
 
-    @ManyToOne
-    @JoinColumn(name = "ReceituarioID")
-    private ReceituarioEntity receituario;}
+    @Column(name = "Dose")
+    private Double dose;
+}

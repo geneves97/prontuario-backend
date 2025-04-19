@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "ProfissionalDaSaude")
+@DiscriminatorValue("PROFISSIONAL_SAUDE")
 public class ProfissionalDaSaudeEntity extends EmpregadoEntity {
 
     @Column(name = "Formacao")
@@ -20,16 +20,6 @@ public class ProfissionalDaSaudeEntity extends EmpregadoEntity {
 
     @Column(name = "RegistroConselho")
     private String registroConselho;
-
-    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL)
-    private List<ReceituarioEntity> receituariosEmitidos;
-
-    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL)
-    private List<ProntuarioEntity> prontuariosEditados;
-
-    @OneToOne
-    @JoinColumn(name = "AutenticacaoID", referencedColumnName = "ID")
-    private AutenticacaoEntity autenticacao;
 
     // --- Métodos do UML ---
 
