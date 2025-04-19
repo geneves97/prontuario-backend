@@ -1,35 +1,33 @@
 package com.neves.prontuario_backend.entity;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "Administrador")
+@DiscriminatorValue("ADMINISTRADOR")
 public class AdministradorEntity extends EmpregadoEntity {
 
-
     public void registrarNovoEmpregado(EmpregadoEntity empregado) {
-        // Lógica para registrar novo empregado
-        // Ex: salvar no repositório de empregados
+        // lógica
     }
 
     public void registrarNovoPaciente(PacienteEntity paciente) {
-        // Lógica para registrar novo paciente
+        // lógica
     }
 
     public void editarDadosEmpregado(EmpregadoEntity empregado) {
-        // Lógica para editar informações do empregado
+        // lógica
     }
 
     public void apagarEmpregado(EmpregadoEntity empregado) {
-        // Lógica para deletar um empregado
+        // lógica
     }
 
     public void apagarPaciente(PacienteEntity paciente) {
-        // Lógica para deletar um paciente
+        // lógica
     }
 }

@@ -10,6 +10,8 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "Empregado")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
 public class EmpregadoEntity {
 
     @Id
