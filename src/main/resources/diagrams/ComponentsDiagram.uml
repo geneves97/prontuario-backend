@@ -1,20 +1,51 @@
 @startuml
-package "Sistema de Prontuário e Receituário" {
+skinparam componentStyle rectangle
 
-    [Frontend] --> [API]
-
-    [API] --> [Componente de Autenticação]
-    [API] --> [Componente de Gerenciamento de Pacientes]
-    [API] --> [Componente de Gerenciamento de Prontuários]
-    [API] --> [Componente de Gerenciamento de Receituários]
-    [API] --> [Componente de Gerenciamento de Empregados]
-
-    [Componente de Autenticação] --> [Banco de Dados Local] : Verifica login/token
-    [Componente de Gerenciamento de Pacientes] --> [Banco de Dados Local] : CRUD Pacientes
-    [Componente de Gerenciamento de Prontuários] --> [Banco de Dados Local] : CRUD Prontuários
-    [Componente de Gerenciamento de Receituários] --> [Banco de Dados Local] : CRUD Receituários
-    [Componente de Gerenciamento de Empregados] --> [Banco de Dados Local] : CRUD Empregados
-
-    [Banco de Dados Local] --> [Banco de Dados Principal] : Sincronização
+package "Frontends" {
+    [Web/Mobile App]
 }
+
+package "Backend" {
+    [API REST]
+    [Orquestrador de Casos de Uso]
+    [Módulo de Autenticação]
+    [Módulo de Pacientes]
+    [Módulo de Prontuários]
+    [Módulo de Receituários]
+    [Módulo de Usuários/Perfis]
+    [Módulo de Auditoria]
+    [Scheduler de Sincronização]
+}
+
+package "Infraestrutura" {
+    [Cache de Sessões]
+    [Banco de Identidade]
+    [Banco Clínico]
+    [Fila/Eventos]
+    [Backup/Replica]
+    [Conectores Externos]
+}
+
+[Web/Mobile App] --> [API REST] : HTTP/JSON
+[API REST] --> [Orquestrador de Casos de Uso] : DTOs
+
+[Orquestrador de Casos de Uso] --> [Módulo de Autenticação]
+[Orquestrador de Casos de Uso] --> [Módulo de Pacientes]
+[Orquestrador de Casos de Uso] --> [Módulo de Prontuários]
+[Orquestrador de Casos de Uso] --> [Módulo de Receituários]
+[Orquestrador de Casos de Uso] --> [Módulo de Usuários/Perfis]
+[Orquestrador de Casos de Uso] --> [Módulo de Auditoria]
+
+[Módulo de Autenticação] --> [Cache de Sessões] : tokens/refresh
+[Módulo de Autenticação] --> [Banco de Identidade] : credenciais
+[Módulo de Pacientes] --> [Banco Clínico] : dados demográficos
+[Módulo de Prontuários] --> [Banco Clínico] : histórico clínico
+[Módulo de Receituários] --> [Banco Clínico] : prescrições
+[Módulo de Usuários/Perfis] --> [Banco de Identidade] : perfis/permissões
+[Módulo de Auditoria] --> [Fila/Eventos] : trilha de auditoria
+[Scheduler de Sincronização] --> [Conectores Externos] : integrações (e.g. regulação)
+
+[Banco de Identidade] --> [Backup/Replica]
+[Banco Clínico] --> [Backup/Replica]
+
 @enduml

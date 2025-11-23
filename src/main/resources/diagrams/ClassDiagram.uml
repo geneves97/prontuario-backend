@@ -1,91 +1,153 @@
 @startuml
 
+package "Identidade e Acesso" {
+    class Usuario {
+        - id: UUID <<Unique>>
+        - nome: String
+        - email: String
+        - perfis: Set<Perfil>
+        + possuiPerfil(perfil: Perfil): Boolean
+    }
+
+    class Credencial {
+        - username: String
+        - senhaHash: String
+        - tokensAtivos: List<Token>
+        + registrarLogin(token: Token)
+        + revogarToken(token: Token)
+    }
+
+    class Token {
+        - valor: String
+        - expiraEm: DateTime
+        + estaExpirado(): Boolean
+    }
+
+    enum Perfil {
+        ADMINISTRADOR
+        PROFISSIONAL_SAUDE
+        ATENDIMENTO
+        PACIENTE
+    }
+
+    Usuario "1" -- "1" Credencial : "possui"
+    Credencial "1" -- "0..*" Token : "gera"
+}
+
 class Empregado {
-    - id: Integer <<Unique>>
-    - nome: String
-    - email: String
-    - cargo: String
+    - matricula: String
+    - ativo: Boolean
     + visualizarProntuario(paciente: Paciente)
     + visualizarReceituarios(paciente: Paciente)
-    + criarProntuario(paciente: Paciente)
-    + editarDadosPaciente(paciente: Paciente)
+    + atualizarCadastroPaciente(paciente: Paciente)
 }
 
 class Administrador {
-    + registrarNovoEmpregado(empregado: Empregado)
-    + registrarNovoPaciente(paciente: Paciente)
-    + editarDadosEmpregado(empregado: Empregado)
-    + apagarEmpregado(empregado: Empregado)
-    + apagarPaciente(paciente: Paciente)
+    + provisionarUsuario(usuario: Usuario, perfis: Set<Perfil>)
+    + ajustarPerfil(usuario: Usuario, perfis: Set<Perfil>)
+    + desabilitarUsuario(usuario: Usuario)
 }
 
 class ProfissionalDaSaude {
     - formacao: String
     - especialidade: String
     - registroConselho: String
-    + editarProntuario(paciente: Paciente)
-    + emitirReceituario(paciente: Paciente)
+    + registrarAtendimento(paciente: Paciente, entrada: EntradaClinica)
+    + emitirReceituario(entrada: EntradaClinica): Receituario
+}
+
+class Atendente {
+    + registrarPaciente(paciente: Paciente)
+    + agendarAtendimento(paciente: Paciente)
 }
 
 class Paciente {
-    - id: Integer <<Unique>>
+    - id: UUID <<Unique>>
     - nome: String
+    - contato: String
+    - dataNascimento: Date
     + visualizarProntuario()
     + visualizarReceituarios()
 }
 
-class Prontuario {
-    - id: Integer <<Unique>>
-    - modeloDeAnamnese: String
-    - queixaPrincipal: String
-    - HDA: String
-    - antecedentesPessoais: String
-    - enterrogatorioSistematico: String
-    - historiaPsicosocial: String
+package "Domínio Clínico" {
+    class Prontuario {
+        - id: UUID <<Unique>>
+        - pacienteId: UUID
+        - historicoSocial: String
+        + registrarEntrada(entrada: EntradaClinica)
+        + obterReceituarios(): List<Receituario>
+    }
 
-    + getMedicamentos(): List<Medicamento>
+    class EntradaClinica {
+        - id: UUID <<Unique>>
+        - dataRegistro: DateTime
+        - queixaPrincipal: String
+        - avaliacao: String
+        - planoTerapeutico: String
+    }
+
+    class Receituario {
+        - id: UUID <<Unique>>
+        - dataEmissao: Date
+        - status: StatusReceituario
+        + adicionarMedicamento(medicamento: Medicamento)
+        + revogar()
+    }
+
+    class Medicamento {
+        - id: UUID <<Unique>>
+        - nome: String
+        - dosagem: String
+        - frequencia: String
+        - quantidade: Integer
+    }
+
+    enum StatusReceituario {
+        RASCUNHO
+        EMITIDO
+        REVOGADO
+    }
 }
 
-class Receituario {
-    - id: Integer <<Unique>>
-    - dataEmissao: Date
-    - medicoId: Integer // FK para ProfissionalDaSaude
-    - medicoNome: String
-    + getMedicamentos(): List<Medicamento>
+package "Serviços" {
+    class ServicoAutenticacao {
+        + autenticar(credencial: Credencial): Token
+        + renovar(token: Token): Token
+    }
+
+    class ServicoPaciente {
+        + atualizarDados(paciente: Paciente)
+        + vincularProntuario(paciente: Paciente, prontuario: Prontuario)
+    }
+
+    class ServicoProntuario {
+        + registrarEntrada(paciente: Paciente, entrada: EntradaClinica)
+        + historicoCompleto(paciente: Paciente): List<EntradaClinica>
+    }
+
+    class ServicoReceituario {
+        + emitir(entrada: EntradaClinica, profissional: ProfissionalDaSaude): Receituario
+        + revogar(receituario: Receituario)
+    }
 }
 
-class Medicamento {
-    - id: Integer <<Unique>>
-    - nome: String
-    - dose: String
-    - quantidade: Integer
-}
-
-class Autenticacao {
-    - username: String
-    - password: String
-    - token: String
-    + login(username: String, password: String): String
-    + logout(token: String)
-    + validateToken(token: String): Boolean
-}
-
+Usuario <|-- Empregado : "é um"
 Empregado <|-- Administrador : "é um"
 Empregado <|-- ProfissionalDaSaude : "é um"
+Empregado <|-- Atendente : "é um"
+Usuario <|-- Paciente : "é um"
 
-Paciente "1" -- "0..1" Prontuario : "tem"
-Paciente "1" -- "0..*" Receituario : "tem"
+Paciente "1" -- "1" Prontuario : "possuí"
+Prontuario "1" -- "1..*" EntradaClinica : "registra"
+EntradaClinica "0..1" -- "1" Receituario : "pode gerar"
 Receituario "1" -- "1..*" Medicamento : "contém"
+EntradaClinica "1" -- "1" ProfissionalDaSaude : "registrado por"
 Receituario "1" -- "1" ProfissionalDaSaude : "emitido por"
-ProfissionalDaSaude "1" -- "0..*" Prontuario : "edita"
-ProfissionalDaSaude "1" -- "0..*" Receituario : "emite"
-Empregado "1" -- "0..*" Paciente : "edita dados de"
-Empregado "1" -- "0..*" Receituario : "visualiza receituários de"
-Empregado "1" -- "0..1" Autenticacao : "utiliza"
-Administrador "1" -- "0..1" Autenticacao : "utiliza"
-ProfissionalDaSaude "1" -- "0..1" Autenticacao : "utiliza"
-Paciente "1" -- "0..1" Autenticacao : "utiliza"
 
-Prontuario "1" -- "0..*" Medicamento : "contém"
+ServicoAutenticacao --> Credencial : "valida"
+ServicoPaciente --> Paciente : "orquestra"
+ServicoProntuario --> Prontuario : "orquestra"
+ServicoReceituario --> Receituario : "orquestra"
 
 @enduml
